@@ -104,11 +104,8 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener {
 
     @Override
     protected void onDestroy() {
-        if (interstitial.isLoaded()){
-            interstitial.show();
-        }
-        super.onDestroy();
         webViewFacebook.onDestroy();
+        super.onDestroy();
     }
 
     private void SetupRefreshLayout() {
@@ -265,6 +262,9 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener {
             }
             case R.id.settings: {//open settings
                 startActivity(new Intent(this, ShowSettingsActivity.class));
+                if (interstitial.isLoaded()){
+                    interstitial.show();
+                }
                 return true;
             }
 
