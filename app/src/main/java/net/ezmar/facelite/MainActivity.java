@@ -34,21 +34,20 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 import android.app.Activity;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.mobfox.sdk.bannerads.Banner;
 import com.mobfox.sdk.bannerads.BannerListener;
 import java.lang.ref.WeakReference;
 import im.delight.android.webview.AdvancedWebView;
+import com.mobfox.sdk.interstitialads.InterstitialAd;
+import com.mobfox.sdk.interstitialads.InterstitialAdListener;
 
 public class MainActivity extends Activity implements AdvancedWebView.Listener {
 
     private Banner banner;
     private AdView mAdView;
     private String appHash = "3e1014b9d3482030ee69797201a34da9";
-    private String adMobInter = "ca-app-pub-4889375749088974/2272489842";
     private SwipeRefreshLayout swipeRefreshLayout;//the layout that allows the swipe refresh
     private AdvancedWebView webViewFacebook;//the main webView where is shown facebook
     private Menu optionsMenu;//contains the main menu
@@ -57,6 +56,7 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener {
     private boolean isSharer = false;//flag: true if the app is called from sharer
     private String urlSharer = "";//to save the url got from the sharer
     private final MyHandler linkHandler = new MyHandler(this); // create link handler (long clicked links)
+    InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,6 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener {
             savedPreferences.edit().putBoolean("first_run", false).apply();
         }
         SetupMobfox();
-        AdMobLoad();
         SetupRefreshLayout();
         ShareLinkHandler();
         SetupWebView();
@@ -117,6 +116,53 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener {
                 RefreshPage();//reload the page
             }
         });
+    }
+
+    private void MobFoxInter()
+    {
+        interstitialAd = new InterstitialAd(this);
+
+
+
+        final Activity self = this;
+        InterstitialAdListener listener = new InterstitialAdListener() {
+
+            @Override
+            public void onInterstitialLoaded(InterstitialAd interstitialAd) {
+                interstitialAd.show();
+                //Toast.makeText(self, "Loaded",Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onInterstitialFailed(InterstitialAd interstitialAd, Exception e) {
+                //Toast.makeText(self, "Failed",Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onInterstitialClosed(InterstitialAd interstitialAd) {
+               // Toast.makeText(self, "Closed",Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onInterstitialFinished() {
+                //Toast.makeText(self, "Finished",Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onInterstitialClicked(InterstitialAd interstitialAd) {
+                //Toast.makeText(self, "Clicked",Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onInterstitialShown(InterstitialAd interstitialAd) {
+                //Toast.makeText(self, "Shown",Toast.LENGTH_SHORT);
+            }
+        };
+
+        interstitialAd.setListener(listener);
+        interstitialAd.setInventoryHash(appHash);
+        interstitialAd.load();
+
     }
 
     // app is already running and gets a new intent (used to share link without open another activity
@@ -261,10 +307,8 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener {
                 break;
             }
             case R.id.settings: {//open settings
+                MobFoxInter();
                 startActivity(new Intent(this, ShowSettingsActivity.class));
-                if (interstitial.isLoaded()){
-                    interstitial.show();
-                }
                 return true;
             }
 
@@ -300,6 +344,7 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         banner.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        interstitialAd.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void ApplyCustomCss() {
@@ -386,33 +431,10 @@ public class MainActivity extends Activity implements AdvancedWebView.Listener {
         }
     }
 
-    InterstitialAd interstitial;
-    private void AdMobLoad()
-    {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        interstitial = new InterstitialAd(this);
-        interstitial.setAdUnitId(adMobInter);
-        interstitial.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-            }
 
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                            }
-        });
-        interstitial.loadAd(adRequest);
-    }
 
     private void SetupMobfox() {
-        Banner.setGetLocation(true);
+        Banner.setLoc(true);
         banner = (Banner) findViewById(R.id.banner);
         mAdView = (AdView) findViewById(R.id.adView);
         final Activity self = this;

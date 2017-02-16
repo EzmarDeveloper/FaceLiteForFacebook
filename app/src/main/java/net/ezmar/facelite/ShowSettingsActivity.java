@@ -5,17 +5,23 @@ package net.ezmar.facelite;
  * GNU GENERAL PUBLIC LICENSE  Version 2, June 1991
  */
 
+import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.widget.Toast;
+
+
 
 
 public class ShowSettingsActivity extends PreferenceActivity {
 
     static String appVersion;
+
+
 
     //using a PreferenceFragment along with the PreferenceActivity (see there
     // http://alvinalexander.com/android/android-tutorial-preferencescreen-preferenceactivity-preferencefragment )
@@ -31,9 +37,15 @@ public class ShowSettingsActivity extends PreferenceActivity {
             e.printStackTrace();
         }
 
+
+
+
+
         //load the fragment
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+
     }
+
 
 
     //preference fragment
