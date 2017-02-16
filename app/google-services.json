@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "723047965294",
+    "firebase_url": "https://facelitemx.firebaseio.com",
+    "project_id": "facelitemx",
+    "storage_bucket": "facelitemx.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723047965294:android:1f6289f79f58f10c",
+        "android_client_info": {
+          "package_name": "net.ezmar.facelite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723047965294-5a7dh7gnq9ilu33quh252frk0sp6vavm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtJ6JUpyZB8Vhf1uHkdNrftQ_PrVcgYTU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
